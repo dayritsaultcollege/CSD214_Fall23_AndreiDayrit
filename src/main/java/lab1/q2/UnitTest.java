@@ -8,9 +8,10 @@ package lab1.q2;
  **/
 
 import lab1.q1.Person;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class UnitTest {
 
