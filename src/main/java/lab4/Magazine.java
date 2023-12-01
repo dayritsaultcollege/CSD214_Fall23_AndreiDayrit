@@ -1,6 +1,6 @@
 package lab4;
 
-import lab3.q3.Publication;
+import lab4.Publication;
 
 public class Magazine extends Publication {
     private String issue;

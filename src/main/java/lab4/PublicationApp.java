@@ -1,18 +1,32 @@
 package lab4;
 
-import lab3.q3.Book;
-import lab3.q3.DiscMagazine;
-import lab3.q3.Magazine;
-import lab3.q3.Publication;
-
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class PublicationApp {
-    private static final ArrayList<Publication> publications = new ArrayList<>();
+    private static final ArrayList<Book> books = new ArrayList<>();
+    private static final ArrayList<Magazine> magazines = new ArrayList<>();
+    private static final ArrayList<DiscMagazine> discMagazines = new ArrayList<>();
+    private static final ArrayList<Object> otherItems = new ArrayList<>();  // ArrayList to store CashTill, Ticket, Pencil
     private static final Scanner scanner = new Scanner(System.in);
 
+
+
+
     public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Publication App");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(400, 300);
+
+            JPanel panel = new JPanel();
+            frame.getContentPane().add(panel);
+            placeComponents(panel);
+
+            frame.setVisible(true);
+        });
+
         int choice;
         do {
             System.out.println("---------------Publication Menu-----------------");
@@ -24,7 +38,10 @@ public class PublicationApp {
             System.out.println("6. List Magazine");
             System.out.println("7. Add Disc Magazine");
             System.out.println("8. List Disc Magazine");
-            System.out.println("9. Quit");
+            System.out.println("9. Add Cash Till");
+            System.out.println("10. Add Ticket");
+            System.out.println("11. Add Pencil");
+            System.out.println("12. Quit");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();  // Consume the newline character
@@ -55,31 +72,50 @@ public class PublicationApp {
                     listDiscMagazines();
                     break;
                 case 9:
+                    addCashTill();
+                    break;
+                case 10:
+                    addTicket();
+                    break;
+                case 11:
+                    addPencil();
+                    break;
+                case 12:
                     System.out.println("Bye...");
                     break;
                 default:
                     System.out.println("Invalid choice. Try again.");
             }
-        } while (choice != 9);
+        } while (choice != 12);
     }
 
     //All the methods below are static methods that are called from the main method.
 
 
     //This method lists all the books in the publications ArrayList.
+// This method lists all the books in the publications ArrayList.
     public static void listAllBooks() {
         System.out.println("---------------List of Books-----------------");
         int index = 1;
-        for (Publication publication : publications) {
-            if (publication instanceof Book) {
-                System.out.println(index + ". " + publication);
+        for (Object item : books) {
+            if (item instanceof Book) {
+                System.out.println(index + ". " + item);
                 index++;
             }
         }
         System.out.println("---------------------------------------------");
+
+        // Additional code to list CashTill, Ticket, Pencil
+        System.out.println("---------------Other Items-----------------");
+        for (Object item : otherItems) {
+            System.out.println(item);
+        }
+        System.out.println("---------------------------------------------");
     }
 
-    //This method adds a book to the publications ArrayList.
+
+    // This method adds a book to the books ArrayList.
+// This method adds a book to the books ArrayList.
     public static void addBook() {
         System.out.println("---------------Add a Book----------------------");
         System.out.print("Enter Author ('q' to quit): ");
@@ -99,21 +135,34 @@ public class PublicationApp {
         double price = scanner.nextDouble();
         scanner.nextLine();  // Consume the newline character
 
-        Book book = new Book(title, price, quantity, author);
-
-        publications.add(book);
-        System.out.println("Book added successfully.");
+        try {
+            Book book = new Book(title, price, quantity, author);
+            for (Object item : books) {
+                if (item instanceof Book && item.equals(book)) {
+                    Book existingBook = (Book) item;
+                    existingBook.setQuantityInStock(existingBook.getQuantityInStock() + quantity);
+                    System.out.println("Book added successfully.");
+                    return;
+                }
+            }
+            System.out.println("Book added successfully.");
+        } catch (ClassCastException e) {
+            System.out.println("Error adding book: " + e.getMessage());
+        }
     }
 
 
-    //This method edits a book in the publications ArrayList.
+
+    // This method edits a book in the books ArrayList.
     public static void editBook() {
         System.out.println("---------------Edit a Book----------------------");
         System.out.print("Enter the title of the book to edit: ");
         String titleToEdit = scanner.nextLine();
 
-        for (Publication publication : publications) {
-            if (publication instanceof Book book && publication.getTitle().equalsIgnoreCase(titleToEdit)) {
+        for (int i = 0; i < books.size(); i++) {
+            Book publication = books.get(i);
+            if (publication instanceof Book && publication.getTitle().equalsIgnoreCase(titleToEdit)) {
+                Book book = (Book) publication;
                 System.out.print("Enter new author: ");
                 String newAuthor = scanner.nextLine();
                 System.out.print("Enter new price: ");
@@ -133,16 +182,15 @@ public class PublicationApp {
         System.out.println("Book not found.");
     }
 
-
-    //This method deletes a book from the publications ArrayList.
     public static void deleteBook() {
         System.out.println("---------------Delete a Book----------------------");
         System.out.print("Enter the title of the book to delete: ");
         String titleToDelete = scanner.nextLine();
 
-        for (Publication publication : publications) {
-            if (publication instanceof Book && publication.getTitle().equalsIgnoreCase(titleToDelete)) {
-                publications.remove(publication);
+        for (int i = 0; i < books.size(); i++) {
+            Book book = books.get(i);
+            if (book.getTitle().equalsIgnoreCase(titleToDelete)) {
+                books.remove(i);  // Remove by index
                 System.out.println("Book deleted successfully.");
                 return;
             }
@@ -150,6 +198,7 @@ public class PublicationApp {
 
         System.out.println("Book not found.");
     }
+
 
 
     //This method adds a magazine to the publications ArrayList.
@@ -167,7 +216,7 @@ public class PublicationApp {
         String issue = scanner.nextLine();
 
         Magazine magazine = new Magazine(title, price, quantity, issue);
-        publications.add(magazine);
+        magazines.add(magazine);
         System.out.println("Magazine added successfully.");
     }
 
@@ -176,11 +225,9 @@ public class PublicationApp {
     public static void listMagazines() {
         System.out.println("---------------List of Magazines-----------------");
         int index = 1;
-        for (Publication publication : publications) {
-            if (publication instanceof Magazine) {
-                System.out.println(index + ". " + publication);
-                index++;
-            }
+        for (Magazine publication : magazines) {
+            System.out.println(index + ". " + publication);
+            index++;
         }
         System.out.println("---------------------------------------------");
     }
@@ -201,7 +248,7 @@ public class PublicationApp {
         int numberOfDiscs = scanner.nextInt();
 
         DiscMagazine discMagazine = new DiscMagazine(title, price, quantity, numberOfDiscs);
-        publications.add(discMagazine);
+        discMagazines.add(discMagazine);
         System.out.println("Disc Magazine added successfully.");
     }
 
@@ -210,12 +257,40 @@ public class PublicationApp {
     public static void listDiscMagazines() {
         System.out.println("---------------List of Disc Magazines-----------------");
         int index = 1;
-        for (Publication publication : publications) {
-            if (publication instanceof DiscMagazine) {
-                System.out.println(index + ". " + publication);
-                index++;
-            }
+        for (DiscMagazine publication : discMagazines) {
+            System.out.println(index + ". " + publication);
+            index++;
         }
         System.out.println("---------------------------------------------");
+    }
+
+    public static void addCashTill() {
+        System.out.println("---------------Add a Cash Till----------------------");
+        CashTill cashTill = new CashTill();
+        otherItems.add(cashTill);
+        System.out.println("Cash Till added successfully.");
+    }
+
+    public static void addTicket() {
+        System.out.println("---------------Add a Ticket----------------------");
+        System.out.print("Enter ticket number: ");
+        String ticketNumber = scanner.nextLine();
+        Ticket ticket = new Ticket(ticketNumber);
+        otherItems.add(ticket);
+        System.out.println("Ticket added successfully.");
+    }
+
+    public static void addPencil() {
+        System.out.println("---------------Add a Pencil----------------------");
+        System.out.print("Enter pencil color: ");
+        String color = scanner.nextLine();
+        Pencil pencil = new Pencil(color);
+        otherItems.add(pencil);
+        System.out.println("Pencil added successfully.");
+    }
+
+    // GUI components for Swing
+    private static void placeComponents(JPanel panel) {
+        // Add Swing GUI components here...
     }
 }

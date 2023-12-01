@@ -1,6 +1,6 @@
 package lab4;
 
-import lab3.q3.Publication;
+import lab4.Publication;
 
 public class DiscMagazine extends Publication {
     private int numberOfDiscs;
