@@ -1,6 +1,5 @@
-package lab4;
+package lab4.part1;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -11,22 +10,7 @@ public class PublicationApp {
     private static final ArrayList<Object> otherItems = new ArrayList<>();  // ArrayList to store CashTill, Ticket, Pencil
     private static final Scanner scanner = new Scanner(System.in);
 
-
-
-
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Publication App");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 300);
-
-            JPanel panel = new JPanel();
-            frame.getContentPane().add(panel);
-            placeComponents(panel);
-
-            frame.setVisible(true);
-        });
-
         int choice;
         do {
             System.out.println("---------------Publication Menu-----------------");
@@ -289,8 +273,4 @@ public class PublicationApp {
         System.out.println("Pencil added successfully.");
     }
 
-    // GUI components for Swing
-    private static void placeComponents(JPanel panel) {
-        // Add Swing GUI components here...
-    }
 }

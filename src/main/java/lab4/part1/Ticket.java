@@ -1,4 +1,4 @@
-package lab4;
+package lab4.part1;
 
 public class Ticket {
     private String ticketNumber;

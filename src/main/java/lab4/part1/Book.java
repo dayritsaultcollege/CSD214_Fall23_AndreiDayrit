@@ -1,4 +1,4 @@
-package lab4;
+package lab4.part1;
 
 import lab3.q3.Publication;
 

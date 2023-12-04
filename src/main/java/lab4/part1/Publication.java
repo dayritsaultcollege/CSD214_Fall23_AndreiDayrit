@@ -1,4 +1,4 @@
-package lab4;
+package lab4.part1;
 
 public abstract class Publication {
     private String title;

@@ -1,4 +1,4 @@
-package lab4;
+package lab4.part1;
 
 public class Pencil {
     private String color;
