@@ -77,7 +77,7 @@ public class PublicationApp {
 
 
     //This method lists all the books in the publications ArrayList.
-// This method lists all the books in the publications ArrayList.
+    // This method lists all the books in the publications ArrayList.
     public static void listAllBooks() {
         System.out.println("---------------List of Books-----------------");
         int index = 1;
@@ -99,7 +99,7 @@ public class PublicationApp {
 
 
     // This method adds a book to the books ArrayList.
-// This method adds a book to the books ArrayList.
+    // This method adds a book to the books ArrayList.
     public static void addBook() {
         System.out.println("---------------Add a Book----------------------");
         System.out.print("Enter Author ('q' to quit): ");
